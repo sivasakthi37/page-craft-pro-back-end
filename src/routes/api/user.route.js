@@ -30,7 +30,7 @@ router.put('/role/:userId', auth, authorize(['admin']), userController.updateUse
 // Disable/ban user
 router.put('/status/:userId', auth, authorize(['admin']), userController.updateUserStatus);
 
-// Search and filter users
-router.get('/search', auth, authorize(['admin']), userController.searchUsers);
+// Get user details by ID (accessible to authenticated users)
+router.get('/:userId/details', auth, authorize(['user', 'admin']), userController.getUserDetailsById);
 
 module.exports = router

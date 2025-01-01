@@ -201,7 +201,7 @@ exports.updateUserRole = async (req, res) => {
     const { role } = req.body;
 
     // Validate role
-    const validRoles = ['user', 'admin', 'super_admin'];
+    const validRoles = ['user', 'admin'];
     if (!validRoles.includes(role)) {
       return res.status(400).json({ 
         message: 'Invalid role',
@@ -239,7 +239,7 @@ exports.updateUserStatus = async (req, res) => {
     const { status } = req.body;
 
     // Validate status
-    const validStatuses = ['active', 'banned', 'suspended'];
+    const validStatuses = ['active', 'banned'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ 
         message: 'Invalid status',
@@ -269,51 +269,38 @@ exports.updateUserStatus = async (req, res) => {
 };
 
 /**
- * Search and filter users (Super Admin only)
+ * Get user details by ID
+ * Accessible to authenticated users and admins
  */
-exports.searchUsers = async (req, res) => {
+exports.getUserDetailsById = async (req, res) => {
   try {
-    const { 
-      username, 
-      email, 
-      role, 
-      status, 
-      subscriptionStatus, 
-      page = 1, 
-      limit = 10 
-    } = req.query;
+    const userId = req.params.userId;
 
-    // Build query object
-    const query = {};
-    if (username) query.username = { $regex: username, $options: 'i' };
-    if (email) query.email = { $regex: email, $options: 'i' };
-    if (role) query.role = role;
-    if (status) query.status = status;
-    if (subscriptionStatus) query.subscriptionStatus = subscriptionStatus;
+    // Find the user by ID and exclude sensitive fields
+    const user = await User.findById(userId)
+      .select('-password -__v')
+      .lean(); // Use lean for better performance
 
-    // Pagination
-    const options = {
-      select: '-password -__v', // Exclude sensitive fields
-      sort: { createdAt: -1 }, // Sort by most recent
-      limit: parseInt(limit),
-      skip: (page - 1) * limit
-    };
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-    // Perform search
-    const users = await User.find(query, null, options);
-    const total = await User.countDocuments(query);
-
+    // Return user details
     res.status(200).json({
-      message: 'Users retrieved successfully',
-      users: users.map(user => user.transform()),
-      pagination: {
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-        totalUsers: total
+      message: 'User details retrieved successfully',
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        subscriptionStatus: user.subscriptionStatus,
+        subscriptionExpiry: user.subscriptionExpiry,
+        createdAt: user.createdAt
       }
     });
   } catch (error) {
-    console.error('Search users error:', error);
-    res.status(500).json({ message: 'Failed to search users' });
+    console.error('Get user details error:', error);
+    res.status(500).json({ message: 'Failed to retrieve user details' });
   }
 };

@@ -5,7 +5,7 @@ const httpStatus = require('http-status');
 const uuidv1 = require('uuid/v1');
 
 const roles = ['user', 'admin']; // Updated roles
-const userStatuses = ['active', 'banned', 'suspended']; // New statuses
+const userStatuses = ['active', 'banned']; // New statuses
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
       default: 'free'
     },
     subscriptionExpiry: { type: Date, default: null },
-    activationKey: { type: String, unique: true, required: true }, // Add this field
+    activationKey: { type: String, required: false }, // Add this field
     pageCount: { 
       type: Number, 
       default: 0,
