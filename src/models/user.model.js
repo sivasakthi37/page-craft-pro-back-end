@@ -28,7 +28,6 @@ const userSchema = new mongoose.Schema(
       default: 'free'
     },
     subscriptionExpiry: { type: Date, default: null },
-    activationKey: { type: String, required: false }, // Add this field
     pageCount: { 
       type: Number, 
       default: 0,

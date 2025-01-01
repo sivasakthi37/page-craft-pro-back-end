@@ -3,20 +3,16 @@ const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const httpStatus = require('http-status');
-const uuidv1 = require('uuid/v1');
 
 // Register new user
 exports.register = async (req, res, next) => {
   try {
-    const activationKey = uuidv1();
     const { username, email, password, role } = req.body;
-    console.log("activationKey", activationKey);
     const user = new User({
       username,
       email,
       password,
-      role,
-      activationKey
+      role
     });
 
     const savedUser = await user.save();

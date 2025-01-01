@@ -28,25 +28,27 @@ const upload = multer({ storage }).single('image');
 
 exports.createPage = async (req, res, next) => {
     try {
-        const { title, blocks } = req.body;
+        const { title, blocks,userId } = req.body;
         console.log("req.body", req.body, req.user);
         
         // Check page limit
         const MAX_FREE_PAGES = 10;
         const pageCount = await Page.countDocuments({ 
-            userId: req.user._id, 
+            userId: userId, 
             isDeleted: false 
         });
-
+        const userPage = await User.findById(userId);
+        console.log("userPage",userPage,pageCount);
+        
         // Enforce page limit for non-paid users
-        if (!req.user.isPaid && pageCount >= MAX_FREE_PAGES) {
+        if (userPage.subscriptionStatus !== 'paid' && pageCount >= MAX_FREE_PAGES && !req.user.role==='admin') {
             return res.status(httpStatus.FORBIDDEN).json({ 
                 message: 'Page creation limit reached. Upgrade to create more pages.' 
             });
         }
 
         // Only authenticated user can create pages
-        const page = new Page({ title, userId: req.user.id, blocks });
+        const page = new Page({ title, userId: userId, blocks });
         const savedPage = await page.save();
 
         res.status(httpStatus.CREATED).json(savedPage);
@@ -240,8 +242,13 @@ exports.checkPageLimit = async (req, res) => {
             });
         }
 
+      let  canCreate;
+if(req.user.role=='admin'){
+    canCreate = true
+}else{
+    canCreate = user.subscriptionStatus === 'paid' || pageCount < MAX_FREE_PAGES;
+}
         // Determine if user can create more pages
-        const canCreate = user.subscriptionStatus === 'paid' || pageCount < MAX_FREE_PAGES;
 
         // Prepare and send response
         res.status(200).json({
