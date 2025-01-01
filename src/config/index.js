@@ -10,11 +10,5 @@ module.exports = {
     uri: process.env.MONGOURI,
     testURI: process.env.MONGOTESTURI
   },
-  transporter: {
-    host: process.env.TRANSPORTER_HOST,
-    port: process.env.TRANSPORTER_PORT,
-    username: process.env.TRANSPORTER_USERNAME,
-    password: process.env.TRANSPORTER_PASSWORD
-  },
   jwtSecret:process.env.JWT_SECRET
 }

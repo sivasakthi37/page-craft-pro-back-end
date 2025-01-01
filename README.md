@@ -1,32 +1,94 @@
-# Express Mongo JWT Boilerplate [![Build Status](https://travis-ci.org/kasvith/express-mongo-jwt-boilerplate.svg?branch=master)](https://travis-ci.org/kasvith/express-mongo-jwt-boilerplate)
+# Page Craft Pro - Backend
+
+## Overview
+Page Craft Pro is a powerful web application that allows users to create and manage digital pages with ease. Built with Node.js, Express, and MongoDB, it offers a flexible and scalable solution for content creation.
+
+## Features
+- User Authentication & Authorization
+- Page Creation with Flexible Blocks
+- Subscription-based Page Limits
+- Admin Management
+- Secure API Endpoints
+
+## Subscription Plans
+### Free Plan
+- Maximum 10 pages
+- Basic page creation features
+
+### Page Craft Pro (Paid Plan)
+- Unlimited page creation
+- Advanced features
+- Priority support
+
+## Prerequisites
+- Node.js (v14+ recommended)
+- MongoDB (v4+ recommended)
+- npm or yarn
 
 ## Installation
 
-- Install NodeJS, MongoDB
-- Install `npm` or `yarn`
-- Rename `.env.example` to `.env`
-- Fulfill `.env` data
-- Start MongoDB
-- Run `yarn run dev` or `npm run dev`
-- Check `http://localhost:3000/api/status` to see it works
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/page-craft-pro-backend.git
+cd page-craft-pro-backend
+```
 
-## With Docker
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-- Make sure you have installed `Docker` and `Docker Compose`
-- Just run `docker-compose up` to start the server
+### 3. Configure Environment
+Create a `.env` file with the following variables:
+```
+PORT=3000
+MONGOURI=mongodb://localhost:27017/pagecraftpro
+JWT_SECRET=your_jwt_secret_key
+```
 
-## Configuration
+### 4. Run the Application
+```bash
+# Development mode
+npm run dev
 
-| Name                 | Description                                                                           | Example                              |
-|----------------------|---------------------------------------------------------------------------------------|--------------------------------------|
-| NODE_ENV             | Environment for node js                                                               | "dev", "prod", "test"                |
-| APP                  | Name of the application                                                               | My cool express app                  |
-| PORT                 | Port to run the application (if you run in **heroku** this will setup  automatically) | 3000                                 |
-| HOSTNAME             | Host name for running the application                                                 | http://localhost:3000                |
-| APP_SECRET           | Secret for running app. Use a strong hash in production and make sure to rotate it    | ddd36434-80fe-4f18-b3b6-e645697f7b84 |
-| MONGOURI             | MongoDB connection URI                                                                | mongodb://localhost:27017/yourapp    |
-| MONGOTESTURI         | MongoDB connection URI for testing                                                    | mongodb://localhost:27017/test-app   |
-| TRANSPORTER_HOST     | Mail server host                                                                      | smtp.mymailer.com                    |
-| TRANSPORTER_PORT     | Mail server port                                                                      | 2525                                 |
-| TRANSPORTER_USERNAME | Mail server username                                                                  | harrypotter                          |
-| TRANSPORTER_PASSWORD | Mail server password                                                                  | alohomora                            |
+# Production mode
+npm start
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register`: Register a new user
+- `POST /api/auth/login`: User login
+- `PUT /api/users/status/:userId`: Update user status (Admin only)
+
+### Pages
+- `POST /api/pages`: Create a new page
+- `GET /api/pages`: Retrieve user's pages
+- `PUT /api/pages/:pageId`: Update a page
+- `DELETE /api/pages/:pageId`: Delete a page
+
+## User Roles
+- `user`: Standard user with page creation limits
+- `admin`: Full system access, unlimited page creation
+
+## Page Creation Limits
+- Free Plan: 10 pages
+- Page Craft Pro: Unlimited pages
+
+## Security
+- JWT-based authentication
+- Role-based access control
+- Password hashing
+- Input validation
+
+## Error Handling
+- Comprehensive error messages
+- Proper HTTP status codes
+- Detailed logging
+
+## License
+This project is licensed under the MIT License.
+
+## Support
+For support, please contact support@pagecraftpro.com
