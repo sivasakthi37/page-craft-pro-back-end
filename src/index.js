@@ -7,5 +7,4 @@ const app = require('./services/express')
 app.start()
 mongoose.connect()
 
-
 module.exports = app
